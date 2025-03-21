@@ -2,70 +2,71 @@ import React from 'react';
 import { useTodos } from '../hooks';
 import styles from './App.module.css';
 import { TodoList } from '../components';
+import { AppContext } from '../context';
 
 function App() {
+	const todosData = useTodos();
 	const {
-		todos,
 		isLoading,
 		newTodo,
 		setNewTodo,
 		isCreating,
 		addTodo,
-		updateTodo,
-		deleteTodo,
 		searchQuery,
 		setSearchQuery,
 		isSorted,
 		setIsSorted,
-	} = useTodos();
+		todos,
+		updateTodo,
+		deleteTodo,
+	} = todosData;
 
 	return (
-		<div className={styles.app}>
-			{isLoading ? (
-				<div className={styles.loader}></div>
-			) : (
-				<>
-					<div className={styles.controls}>
-						<input
-							type="text"
-							className={styles.search}
-							placeholder="Поиск по задачам..."
-							value={searchQuery}
-							onChange={(e) => setSearchQuery(e.target.value)}
-						/>
-						<button
-							className={styles.btn}
-							onClick={() => setIsSorted(!isSorted)}
-						>
-							{isSorted ? 'Отключить сортировку' : 'Сортировать A-Z'}
-						</button>
-					</div>
+		<AppContext.Provider value={todosData}>
+			{/* Использование просто AppContext не получилось, видимо проблемы с версиями */}
+			<div className={styles.app}>
+				{isLoading ? (
+					<div className={styles.loader}></div>
+				) : (
+					<>
+						<div className={styles.controls}>
+							<input
+								type="text"
+								className={styles.search}
+								placeholder="Поиск по задачам..."
+								value={searchQuery}
+								onChange={(e) => setSearchQuery(e.target.value)}
+							/>
+							<button
+								className={styles.btn}
+								onClick={() => setIsSorted(!isSorted)}
+							>
+								{isSorted ? 'Отключить сортировку' : 'Сортировать A-Z'}
+							</button>
+						</div>
 
-					<TodoList
-						todos={todos}
-						updateTodo={updateTodo}
-						deleteTodo={deleteTodo}
-					/>
+						<TodoList />
 
-					<form className={styles.form} onSubmit={addTodo}>
-						<input
-							type="text"
-							className={styles.input}
-							value={newTodo}
-							onChange={(e) => setNewTodo(e.target.value)}
-							placeholder="Введите задачу"
-						/>
-						<button
-							type="submit"
-							className={styles.btn}
-							disabled={isCreating}
-						>
-							{isCreating ? 'Добавление...' : 'Добавить'}
-						</button>
-					</form>
-				</>
-			)}
-		</div>
+						<form className={styles.form} onSubmit={addTodo}>
+							<input
+								type="text"
+								className={styles.input}
+								value={newTodo}
+								onChange={(e) => setNewTodo(e.target.value)}
+								placeholder="Введите задачу"
+							/>
+							<button
+								type="submit"
+								className={styles.btn}
+								disabled={isCreating}
+							>
+								{isCreating ? 'Добавление...' : 'Добавить'}
+							</button>
+						</form>
+					</>
+				)}
+			</div>
+		</AppContext.Provider>
 	);
 }
 

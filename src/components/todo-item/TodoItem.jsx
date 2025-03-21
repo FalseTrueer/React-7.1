@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import styles from './TodoItem.module.css';
 import PropTypes from 'prop-types';
+import { AppContext } from '../../context';
 
-export function TodoItem({ todo, updateTodo, deleteTodo }) {
+export function TodoItem({ todo }) {
+	const { updateTodo, deleteTodo } = useContext(AppContext);
 	const [isEditing, setIsEditing] = useState(false);
 	const [editedTitle, setEditedTitle] = useState(todo.title);
 	const [isCompleted, setIsCompleted] = useState(todo.completed);
@@ -71,6 +73,4 @@ TodoItem.propTypes = {
 		title: PropTypes.string.isRequired,
 		completed: PropTypes.bool.isRequired,
 	}).isRequired,
-	updateTodo: PropTypes.func.isRequired,
-	deleteTodo: PropTypes.func.isRequired,
 };

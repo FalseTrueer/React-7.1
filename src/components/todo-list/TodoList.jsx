@@ -1,35 +1,18 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import styles from './TodoList.module.css';
-import PropTypes from 'prop-types';
 import { TodoItem } from '../';
+import { AppContext } from '../../context';
 
-export function TodoList({ todos, updateTodo, deleteTodo }) {
+export function TodoList() {
+	const { todos } = useContext(AppContext);
+
 	return (
 		<ul className={styles.todoList}>
 			{todos.length === 0 ? (
 				<p className={styles.empty}>Задач не найдено</p>
 			) : (
-				todos.map((todo) => (
-					<TodoItem
-						key={todo.id}
-						todo={todo}
-						updateTodo={updateTodo}
-						deleteTodo={deleteTodo}
-					/>
-				))
+				todos.map((todo) => <TodoItem key={todo.id} todo={todo} />)
 			)}
 		</ul>
 	);
 }
-
-TodoList.propTypes = {
-	todos: PropTypes.arrayOf(
-		PropTypes.shape({
-			id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-			title: PropTypes.string.isRequired,
-			completed: PropTypes.bool.isRequired,
-		}),
-	).isRequired,
-	updateTodo: PropTypes.func.isRequired,
-	deleteTodo: PropTypes.func.isRequired,
-};
